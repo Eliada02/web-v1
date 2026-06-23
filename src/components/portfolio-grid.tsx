@@ -4,6 +4,7 @@ import {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -14,6 +15,29 @@ import { cn } from "@/lib/utils";
 import { portfolioGrid, type PortfolioGridItem } from "@/lib/site";
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
+
+function curtainTransform(
+  direction: "vertical" | "horizontal",
+  reveal: number,
+  side: "a" | "b",
+): string {
+  const closed = (1 - reveal) * 100;
+  const isVertical = direction === "vertical";
+  if (isVertical) {
+    return side === "a"
+      ? `translate3d(0, ${-closed}%, 0)`
+      : `translate3d(0, ${closed}%, 0)`;
+  }
+  return side === "a"
+    ? `translate3d(${-closed}%, 0, 0)`
+    : `translate3d(${closed}%, 0, 0)`;
+}
+
+function cardReveal(progress: number, index: number, active: number) {
+  if (index > active) return 1;
+  if (index === 0) return clamp01(progress);
+  return clamp01(progress - (index - 1));
+}
 
 export type PortfolioCardHandle = {
   setReveal: (reveal: number, focused: boolean) => void;
@@ -168,11 +192,13 @@ const PortfolioFocusCard = forwardRef<
             ref={curtainARef}
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 z-20 h-1/2 bg-background will-change-transform motion-reduce:hidden"
+            style={{ transform: curtainTransform(direction, initialReveal, "a") }}
           />
           <div
             ref={curtainBRef}
             aria-hidden
             className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1/2 bg-background will-change-transform motion-reduce:hidden"
+            style={{ transform: curtainTransform(direction, initialReveal, "b") }}
           />
         </>
       ) : (
@@ -181,11 +207,13 @@ const PortfolioFocusCard = forwardRef<
             ref={curtainARef}
             aria-hidden
             className="pointer-events-none absolute inset-y-0 left-0 z-20 w-1/2 bg-background will-change-transform motion-reduce:hidden"
+            style={{ transform: curtainTransform(direction, initialReveal, "a") }}
           />
           <div
             ref={curtainBRef}
             aria-hidden
             className="pointer-events-none absolute inset-y-0 right-0 z-20 w-1/2 bg-background will-change-transform motion-reduce:hidden"
+            style={{ transform: curtainTransform(direction, initialReveal, "b") }}
           />
         </>
       )}
@@ -248,15 +276,15 @@ export function PortfolioGrid() {
       window.visualViewport?.height ?? window.innerHeight;
 
     const applyProgress = (progress: number) => {
-      const newActive = Math.min(count - 1, Math.round(progress));
+      const active = Math.min(count - 1, Math.round(progress));
 
       portfolioGrid.forEach((_, i) => {
-        const reveal = clamp01(progress - (i - 1));
+        const reveal = cardReveal(progress, i, active);
         const wrapper = wrapperRefs.current[i];
         if (wrapper) {
-          wrapper.style.zIndex = String(reveal === 0 ? 10 : 11 + i);
+          wrapper.style.zIndex = String(reveal >= 1 ? 10 : 11 + i);
         }
-        cardRefs.current[i]?.setReveal(reveal, i === newActive);
+        cardRefs.current[i]?.setReveal(reveal, i === active);
       });
     };
 
@@ -290,6 +318,31 @@ export function PortfolioGrid() {
       window.visualViewport?.removeEventListener("scroll", onScroll);
     };
   }, [count]);
+
+  useLayoutEffect(() => {
+    if (!useScrollShowcase) return;
+
+    const track = trackRef.current;
+    if (!track) return;
+
+    const viewportStep = () =>
+      window.visualViewport?.height ?? window.innerHeight;
+
+    const rect = track.getBoundingClientRect();
+    const step = viewportStep();
+    const scrolled = Math.max(0, -rect.top);
+    const progress = Math.min(count - 1, scrolled / step);
+    const active = Math.min(count - 1, Math.round(progress));
+
+    portfolioGrid.forEach((_, i) => {
+      const reveal = cardReveal(progress, i, active);
+      const wrapper = wrapperRefs.current[i];
+      if (wrapper) {
+        wrapper.style.zIndex = String(reveal >= 1 ? 10 : 11 + i);
+      }
+      cardRefs.current[i]?.setReveal(reveal, i === active);
+    });
+  }, [count, useScrollShowcase]);
 
   if (!useScrollShowcase) {
     return <PortfolioGridFallback />;
@@ -332,7 +385,7 @@ export function PortfolioGrid() {
                   cardRefs.current[i] = el;
                 }}
                 item={item}
-                initialReveal={i === 0 ? 1 : 0}
+                initialReveal={i === 0 ? 0 : 1}
                 initialFocused={i === 0}
                 direction={i % 2 === 0 ? "vertical" : "horizontal"}
               />
