@@ -112,35 +112,38 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Desktop actions */}
-          <div className="hidden items-center gap-3 md:flex">
+          {/* Actions */}
+          <div className="flex items-center gap-1 sm:gap-2">
             <a
               href={tel}
               aria-label={`Chiama ${site.phone}`}
               title={site.phone}
               className={cn(
-                "inline-flex size-9 items-center justify-center transition-colors",
-                overHero
-                  ? "text-white hover:bg-white/10"
-                  : "text-foreground/70 hover:bg-muted hover:text-foreground",
+                "inline-flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors md:size-9",
+                "motion-safe:max-md:animate-[icon-pulse_2s_ease-out_infinite]",
+                open
+                  ? "text-primary hover:bg-primary/10"
+                  : overHero
+                    ? "text-white motion-safe:max-md:animate-[btn-pulse-outline_2s_ease-out_infinite] hover:bg-white/10"
+                    : "text-primary hover:bg-primary/10",
               )}
             >
               <Phone className="size-5" />
             </a>
-            <Button asChild pulse>
-              <a href="/#contatti">Preventivo gratuito</a>
-            </Button>
-          </div>
 
-          {/* Mobile actions */}
-          <div className="flex items-center gap-1 md:hidden">
+            <div className="hidden items-center gap-3 md:flex">
+              <Button asChild pulse>
+                <a href="/#contatti">Preventivo gratuito</a>
+              </Button>
+            </div>
+
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Chiudi menu" : "Apri menu"}
               aria-expanded={open}
               className={cn(
-                "inline-flex size-10 flex-col items-center justify-center transition-colors",
+                "inline-flex size-10 shrink-0 flex-col items-center justify-center rounded-lg transition-colors md:hidden",
                 open ? "text-foreground" : solidText,
                 !open &&
                   "motion-safe:animate-[nav-pulse_1.5s_ease-in-out_infinite]",
@@ -212,13 +215,6 @@ export function Navbar() {
               <ArrowRight className="size-4" />
             </a>
           </Button>
-          <a
-            href={tel}
-            className="flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground"
-          >
-            <Phone className="size-4" />
-            {site.phone}
-          </a>
         </div>
       </div>
     </>

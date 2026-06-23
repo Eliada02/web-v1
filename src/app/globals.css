@@ -165,6 +165,18 @@
   }
 }
 
+@keyframes icon-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+}
+
 @keyframes heroZoom {
   from {
     transform: scale(1);

@@ -191,13 +191,11 @@ export function PortfolioGrid() {
   const count = portfolioGrid.length;
 
   useEffect(() => {
-    // The sticky, scroll-driven showcase is great with a mouse but feels like
-    // scroll-jacking on touch/small screens (each item eats a full viewport of
-    // swiping). Fall back to a plain grid there, and for reduced-motion users.
-    const skipShowcase = window.matchMedia(
-      "(prefers-reduced-motion: reduce), (max-width: 768px), (pointer: coarse)",
+    // Plain grid only for users who prefer reduced motion.
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (skipShowcase) {
+    if (reducedMotion) {
       setUseScrollShowcase(false);
       return;
     }
@@ -207,9 +205,12 @@ export function PortfolioGrid() {
 
     let raf = 0;
 
+    const viewportStep = () =>
+      window.visualViewport?.height ?? window.innerHeight;
+
     const update = () => {
       const rect = track.getBoundingClientRect();
-      const step = window.innerHeight;
+      const step = viewportStep();
       const scrolled = Math.max(0, -rect.top);
       const index = Math.min(count - 1, Math.floor(scrolled / step));
       setActiveIndex(index);
@@ -223,11 +224,13 @@ export function PortfolioGrid() {
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
     };
   }, [count]);
 
@@ -242,22 +245,22 @@ export function PortfolioGrid() {
       style={{ height: `${count * 100}svh` }}
     >
       <div className="sticky top-0 flex h-svh flex-col bg-background">
-        <div className="section-container shrink-0 pt-8 pb-4 sm:pt-10 sm:pb-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="section-container shrink-0 pt-6 pb-3 sm:pt-10 sm:pb-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
             <div>
-              <span className="text-sm font-semibold uppercase tracking-wider text-primary">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary sm:text-sm">
                 Portfolio
               </span>
-              <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
+              <h2 className="mt-1.5 text-xl font-bold tracking-tight sm:mt-2 sm:text-3xl lg:text-4xl">
                 Alcuni dei nostri interventi
               </h2>
-              <p className="mt-2 max-w-xl text-sm text-muted-foreground sm:text-base">
+              <p className="mt-1.5 max-w-xl text-xs text-muted-foreground sm:mt-2 sm:text-base">
                 Edifici residenziali, uffici, hotel e poli industriali in tutta
                 Italia.
               </p>
             </div>
 
-            <div className="flex items-center gap-3 sm:flex-col sm:items-end">
+            <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end">
               <span className="text-sm font-medium tabular-nums text-muted-foreground">
                 {String(activeIndex + 1).padStart(2, "0")}
                 <span className="text-foreground/40"> / </span>
@@ -282,12 +285,12 @@ export function PortfolioGrid() {
           </div>
         </div>
 
-        <div className="section-container relative min-h-0 flex-1 pb-8 sm:pb-10">
+        <div className="section-container relative min-h-0 flex-1 pb-4 sm:pb-10">
           {portfolioGrid.map((item, i) => (
             <div
               key={item.title}
               className={cn(
-                "absolute inset-0 pb-8 sm:pb-10",
+                "absolute inset-0 pb-4 sm:pb-10",
                 i === activeIndex ? "z-20" : "z-10",
               )}
             >
@@ -301,7 +304,7 @@ export function PortfolioGrid() {
           ))}
         </div>
 
-        <p className="section-container shrink-0 pb-4 text-center text-xs text-muted-foreground sm:pb-6">
+        <p className="section-container shrink-0 pb-3 text-center text-[0.65rem] text-muted-foreground sm:pb-6 sm:text-xs">
           Scorri per esplorare ogni intervento
         </p>
       </div>
