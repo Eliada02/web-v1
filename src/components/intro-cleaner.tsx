@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Mountain } from "lucide-react";
+import { site } from "@/lib/site";
 
 const dropStyle: React.CSSProperties = {
   background:
@@ -98,7 +99,7 @@ export function IntroCleaner() {
             <Mountain className="size-7" />
           </span>
           <span className="text-2xl font-bold tracking-tight text-foreground">
-            VERTIKAL
+            {site.name}
           </span>
           <span className="flex items-center text-sm text-muted-foreground">
             Stiamo pulendo i vetri

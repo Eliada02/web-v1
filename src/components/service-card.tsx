@@ -31,7 +31,7 @@ export function ServiceCard({
     <div
       onMouseMove={handleMove}
       className={cn(
-        "group relative overflow-hidden border border-white/10 p-6 transition-colors duration-300 hover:bg-primary/[0.06] sm:p-7",
+        "group relative overflow-hidden border border-white/10 p-5 transition-colors duration-300 hover:bg-primary/[0.06] sm:p-6 lg:p-7",
         className,
       )}
     >

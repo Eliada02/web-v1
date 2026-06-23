@@ -14,7 +14,7 @@ import {
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { Button } from "@/components/ui/button";
-import { getProject, projects } from "@/lib/site";
+import { getProject, projects, site } from "@/lib/site";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -27,9 +27,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  if (!project) return { title: "Lavoro non trovato — VERTIKAL" };
+  if (!project) return { title: `Lavoro non trovato — ${site.name}` };
   return {
-    title: `${project.title} — VERTIKAL`,
+    title: `${project.title} — ${site.name}`,
     description: project.summary,
   };
 }
@@ -157,7 +157,7 @@ export default async function ProjectPage({
                     Hai un intervento simile? Richiedi un sopralluogo e un
                     preventivo gratuito.
                   </p>
-                  <Button asChild className="mt-4 w-full">
+                  <Button asChild pulse className="mt-4 w-full">
                     <Link href="/#contatti">
                       Richiedi un preventivo
                       <ArrowRight className="size-4" />

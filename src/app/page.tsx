@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
+import { ContactFooterZone } from "@/components/contact-footer-zone";
 import { Hero } from "@/components/sections/hero";
 import { Stats } from "@/components/sections/stats";
 import { Services } from "@/components/sections/services";
@@ -23,9 +24,11 @@ export default function Home() {
         <Projects />
         <Safety />
         <Testimonials />
-        <Contact />
+        <ContactFooterZone>
+          <Contact />
+          <Footer />
+        </ContactFooterZone>
       </main>
-      <Footer />
     </>
   );
 }

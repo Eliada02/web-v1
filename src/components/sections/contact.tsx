@@ -36,10 +36,10 @@ export function Contact() {
   return (
     <section
       id="contatti"
-      className="dark bg-background py-20 text-foreground lg:py-28"
+      className="section pb-10 text-foreground lg:pb-12"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-2">
+      <div className="section-container">
+        <div className="grid gap-10 sm:gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
             <span className="text-sm font-semibold uppercase tracking-wider text-primary">
               Contatti
@@ -112,7 +112,7 @@ export function Contact() {
                   placeholder="Descrivi brevemente il lavoro e l'indirizzo dell'immobile…"
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+              <Button type="submit" size="lg" pulse className="w-full" disabled={submitting}>
                 {submitting ? "Invio in corso…" : "Invia richiesta"}
                 {!submitting && <Send className="size-4" />}
               </Button>

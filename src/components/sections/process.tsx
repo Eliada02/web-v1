@@ -5,10 +5,10 @@ export function Process() {
   return (
     <section
       id="processo"
-      className="dark bg-background py-20 text-foreground lg:py-28"
+      className="section dark bg-background text-foreground"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
+      <div className="section-container">
+        <Reveal className="section-header">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Come lavoriamo
           </span>
@@ -21,7 +21,7 @@ export function Process() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="section-content grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-6">
           {processSteps.map((step, i) => (
             <Reveal key={step.step} delay={i * 100} className="group relative">
               <div className="text-5xl font-bold text-primary/20 transition-colors duration-300 group-hover:text-primary">

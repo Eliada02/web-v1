@@ -52,11 +52,11 @@
 
 :root {
   /* Brand navy (#000080) — constant across themes */
-  --navy: oklch(0.271 0.188 264.1);
-  --navy-foreground: oklch(0.985 0 0);
+  --navy: #000080;
+  --navy-foreground: #ffffff;
 
   --background: oklch(1 0 0);
-  --foreground: oklch(0.271 0.188 264.1);
+  --foreground: #000080;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.271 0.188 264.1);
   --popover: oklch(1 0 0);
@@ -90,7 +90,7 @@
 }
 
 .dark {
-  --background: oklch(0.178 0.058 264.1);
+  --background: lab(4.65509% 3.35723 -19.4133);
   --foreground: oklch(0.97 0.012 264.1);
   --card: oklch(0.232 0.062 264.1);
   --card-foreground: oklch(0.97 0.012 264.1);
@@ -141,12 +141,54 @@
   50% { transform: scale(1.18); }
 }
 
+@keyframes btn-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 12px color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent);
+  }
+}
+
+@keyframes btn-pulse-outline {
+  0% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgb(255 255 255 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(255 255 255 / 0);
+  }
+}
+
 @keyframes heroZoom {
   from {
     transform: scale(1);
   }
   to {
     transform: scale(1.08);
+  }
+}
+
+@layer components {
+  .section {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+
+  .section-container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-header {
+    @apply mx-auto max-w-2xl text-center;
+  }
+
+  .section-content {
+    @apply mt-12 sm:mt-14;
   }
 }
 

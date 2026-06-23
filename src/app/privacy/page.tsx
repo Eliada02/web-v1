@@ -6,9 +6,9 @@ import { Footer } from "@/components/site/footer";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — VERTIKAL",
+  title: `Privacy Policy — ${site.name}`,
   description:
-    "Informativa sul trattamento dei dati personali di VERTIKAL ai sensi del Regolamento (UE) 2016/679 (GDPR).",
+    `Informativa sul trattamento dei dati personali di ${site.name} ai sensi del Regolamento (UE) 2016/679 (GDPR).`,
 };
 
 const lastUpdated = "22 giugno 2026";
@@ -142,11 +142,69 @@ export default function PrivacyPage() {
 
             <Section title="7. Cookie" id="cookie">
               <p>
-                Questo sito utilizza esclusivamente cookie tecnici necessari al
-                corretto funzionamento delle pagine, per i quali non è richiesto
-                il consenso. Non vengono utilizzati cookie di profilazione. Puoi
-                gestire o disabilitare i cookie tramite le impostazioni del tuo
-                browser.
+                Questo sito utilizza cookie e tecnologie simili per garantire il
+                corretto funzionamento delle pagine e, solo previo consenso,
+                per finalità analitiche o di marketing. Al momento non sono
+                attivi strumenti di tracciamento di terze parti: le preferenze
+                vengono salvate localmente nel browser.
+              </p>
+
+              <h3 className="mt-6 text-base font-semibold">
+                Categorie di cookie
+              </h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-muted-foreground">
+                <li>
+                  <span className="text-foreground">Necessari</span> — sempre
+                  attivi; memorizzano la scelta sui cookie e consentono la
+                  navigazione del sito.
+                </li>
+                <li>
+                  <span className="text-foreground">Analitici</span> — opzionali;
+                  servono a misurare l&apos;utilizzo del sito in forma aggregata.
+                  Attualmente non sono in uso.
+                </li>
+                <li>
+                  <span className="text-foreground">Marketing</span> — opzionali;
+                  servono a personalizzare contenuti promozionali. Attualmente
+                  non sono in uso.
+                </li>
+              </ul>
+
+              <h3 className="mt-6 text-base font-semibold">
+                Cookie e dati memorizzati
+              </h3>
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full min-w-[32rem] border-collapse text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left">
+                      <th className="py-2 pr-4 font-semibold">Nome</th>
+                      <th className="py-2 pr-4 font-semibold">Tipo</th>
+                      <th className="py-2 pr-4 font-semibold">Durata</th>
+                      <th className="py-2 font-semibold">Finalità</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-muted-foreground">
+                    <tr className="border-b border-border/60">
+                      <td className="py-3 pr-4 text-foreground">vk-cookie-consent</td>
+                      <td className="py-3 pr-4">Necessario (localStorage)</td>
+                      <td className="py-3 pr-4">12 mesi</td>
+                      <td className="py-3">
+                        Memorizza le preferenze espresse tramite il banner cookie
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3 className="mt-6 text-base font-semibold">
+                Gestione del consenso
+              </h3>
+              <p className="mt-3">
+                Al primo accesso viene mostrato un banner che consente di accettare
+                tutti i cookie, rifiutare quelli opzionali o personalizzare le
+                preferenze. Puoi modificare la scelta in qualsiasi momento
+                cliccando su «Gestisci cookie» nel footer del sito oppure
+                disabilitando i cookie dalle impostazioni del browser.
               </p>
             </Section>
 

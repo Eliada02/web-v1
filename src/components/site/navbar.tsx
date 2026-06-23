@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Mountain, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -11,20 +11,12 @@ const sectionId = (href: string) => href.split("#")[1] ?? "";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState("home");
   const [open, setOpen] = useState(false);
-  const lastY = useRef(0);
 
-  // Glass-on-scroll + hide-on-scroll-down / reveal-on-scroll-up.
+  // Solid glass background once the user leaves the top of the page.
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      if (y > lastY.current && y > 480) setHidden(true);
-      else setHidden(false);
-      lastY.current = y;
-    };
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -70,14 +62,13 @@ export function Navbar() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[transform,background-color,backdrop-filter,border-color] duration-300",
-          hidden && !open ? "-translate-y-full" : "translate-y-0",
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-300",
           scrolled || open
             ? "border-b border-border bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/70"
             : "border-b border-transparent bg-transparent",
         )}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="section-container flex h-16 items-center justify-between">
           {/* Logo */}
           <a
             href="/#home"
@@ -136,7 +127,7 @@ export function Navbar() {
             >
               <Phone className="size-5" />
             </a>
-            <Button asChild>
+            <Button asChild pulse>
               <a href="/#contatti">Preventivo gratuito</a>
             </Button>
           </div>
@@ -181,11 +172,11 @@ export function Navbar() {
       {/* Mobile full-screen overlay menu */}
       <div
         className={cn(
-          "fixed inset-0 z-40 flex flex-col bg-background transition-[opacity,visibility] duration-300 md:hidden",
+          "fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background transition-[opacity,visibility] duration-300 md:hidden",
           open ? "visible opacity-100" : "invisible opacity-0",
         )}
       >
-        <nav className="flex flex-col px-6 pt-24">
+        <nav className="flex flex-col px-4 pt-24 sm:px-6">
           {navLinks.map((link, i) => {
             const isActive = active === sectionId(link.href);
             return (
@@ -195,7 +186,7 @@ export function Navbar() {
                 onClick={() => setOpen(false)}
                 style={{ transitionDelay: open ? `${100 + i * 50}ms` : "0ms" }}
                 className={cn(
-                  "flex items-baseline gap-4 border-b border-border/60 py-4 text-2xl font-semibold tracking-tight transition-all duration-300",
+                  "flex items-baseline gap-4 border-b border-border/60 py-3.5 text-xl font-semibold tracking-tight transition-all duration-300 sm:py-4 sm:text-2xl",
                   open ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0",
                   isActive ? "text-primary" : "text-foreground",
                 )}
@@ -210,12 +201,12 @@ export function Navbar() {
         </nav>
 
         <div
-          className="mt-auto space-y-4 px-6 pb-10 transition-all duration-300"
+          className="mt-auto space-y-4 px-4 pb-10 transition-all duration-300 sm:px-6"
           style={{
             transitionDelay: open ? `${100 + navLinks.length * 50}ms` : "0ms",
           }}
         >
-          <Button asChild size="lg" className="w-full text-base">
+          <Button asChild size="lg" pulse className="w-full text-base">
             <a href="#contatti" onClick={() => setOpen(false)}>
               Preventivo gratuito
               <ArrowRight className="size-4" />

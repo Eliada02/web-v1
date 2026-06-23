@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Mail, MapPin, Mountain, Phone } from "lucide-react";
+import { CookieSettingsLink } from "@/components/cookie-settings-link";
 import { navLinks, services, site } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="dark border-t bg-background text-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+    <footer>
+      <div className="section-container grid gap-8 pt-4 pb-14 sm:gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <a href="/#home" className="flex items-center gap-2 font-bold">
             <span className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -80,13 +81,13 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
+      <div className="border-t border-white/8">
+        <div className="section-container flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground sm:flex-row">
           <p>
             © {new Date().getFullYear()} {site.name} S.r.l. — P.IVA
             01234567890. Tutti i diritti riservati.
           </p>
-          <p className="flex items-center gap-2">
+          <p className="flex flex-wrap items-center justify-center gap-2 sm:justify-end">
             <Link
               href="/privacy"
               className="transition-colors hover:text-foreground"
@@ -100,6 +101,8 @@ export function Footer() {
             >
               Cookie Policy
             </Link>
+            <span aria-hidden>·</span>
+            <CookieSettingsLink className="transition-colors hover:text-foreground" />
           </p>
         </div>
       </div>

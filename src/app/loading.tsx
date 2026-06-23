@@ -1,4 +1,5 @@
 import { Mountain } from "lucide-react";
+import { site } from "@/lib/site";
 
 /**
  * Route-level Suspense fallback (App Router). Shown while a page segment is
@@ -43,7 +44,7 @@ export default function Loading() {
             <Mountain className="size-5" />
           </span>
           <span className="text-lg font-bold tracking-tight text-foreground">
-            VERTIKAL
+            {site.name}
           </span>
         </div>
         <p className="flex items-center text-sm text-muted-foreground">

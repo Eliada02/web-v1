@@ -9,6 +9,12 @@ export interface BackgroundVideoProps {
   /** Optional still shown while the video loads. Omit to show only the video
    *  (over a solid dark fallback) with no poster image. */
   poster?: string;
+  /**
+   * Playback speed multiplier. `< 1` slows the clip down, which makes a short
+   * loop feel longer and more cinematic (works best on high-fps sources).
+   * Defaults to `1` (normal speed).
+   */
+  playbackRate?: number;
   className?: string;
 }
 
@@ -18,11 +24,17 @@ export interface BackgroundVideoProps {
  * Performance / UX choices:
  *  - The poster paints immediately; the (heavy) video file is only requested
  *    after mount, so it never blocks first paint.
+ *  - Pauses when scrolled off-screen to free GPU during the rest of the page.
  *  - Respects `prefers-reduced-motion`: those users get the static poster and
  *    the video is never downloaded.
  *  - `muted` + `playsInline` are required for autoplay on mobile/Safari.
  */
-export function BackgroundVideo({ src, poster, className }: BackgroundVideoProps) {
+export function BackgroundVideo({
+  src,
+  poster,
+  playbackRate = 1,
+  className,
+}: BackgroundVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
   const [enabled, setEnabled] = useState(false);
 
@@ -34,12 +46,28 @@ export function BackgroundVideo({ src, poster, className }: BackgroundVideoProps
   useEffect(() => {
     const video = ref.current;
     if (!video || !enabled) return;
+
     video.load();
-    // Some browsers need an explicit play() after the source is attached.
+    video.playbackRate = playbackRate;
     video.play().catch(() => {
       /* autoplay can be blocked — the poster remains as a graceful fallback */
     });
-  }, [enabled]);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.playbackRate = playbackRate;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0 },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [enabled, playbackRate]);
 
   return (
     <video

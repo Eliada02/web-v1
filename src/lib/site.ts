@@ -11,10 +11,11 @@ import {
 } from "lucide-react";
 
 export const site = {
-  name: "VERTIKAL",
+  name: "Lavor in Corda",
+  url: "https://www.lavorincorda.com",
   tagline: "Edilizia acrobatica & lavori in quota su fune",
   phone: "+39 02 1234 5678",
-  email: "info@vertikal.it",
+  email: "info@lavorincorda.com",
   address: "Via delle Alpi 24, 20121 Milano (MI)",
 };
 
@@ -143,8 +144,87 @@ export interface Project {
   gallery: string[];
 }
 
+export interface PortfolioGridItem {
+  title: string;
+  category: string;
+  image: string;
+  href: string;
+  featured?: boolean;
+  gridClass: string;
+}
+
 const u = (id: string, w = 1200) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+export const portfolioGrid: PortfolioGridItem[] = [
+  {
+    title: "Pulizia facciate",
+    category: "Lavaggio & sanificazione",
+    image: u("1486406146926-c627a92ad1ab"),
+    href: "/lavori/torre-uffici-milano",
+    featured: true,
+    gridClass:
+      "md:col-span-2 lg:col-span-2 lg:row-span-2 lg:col-start-1 lg:row-start-1",
+  },
+  {
+    title: "Ristrutturazioni",
+    category: "Ripristino & consolidamento",
+    image: u("1449157291145-7efd050a4d0e"),
+    href: "/lavori/palazzo-storico-torino",
+    gridClass: "lg:col-span-2 lg:col-start-3 lg:row-start-1",
+  },
+  {
+    title: "Impermeabilizzazioni",
+    category: "Coperture & terrazzi",
+    image: u("1487958449943-2429e8be8625"),
+    href: "/lavori/residence-genova",
+    gridClass: "lg:col-start-3 lg:row-start-2",
+  },
+  {
+    title: "Verniciature",
+    category: "Tinteggiatura facciate",
+    image: u("1545324418-cc1a3fa10c00"),
+    href: "/lavori/hotel-como",
+    gridClass: "lg:col-start-4 lg:row-start-2",
+  },
+  {
+    title: "Serramenti",
+    category: "Manutenzione & sostituzione",
+    image: u("1497366216548-37526070297c"),
+    href: "/#servizi",
+    gridClass:
+      "lg:col-start-1 lg:row-start-3 lg:row-span-2",
+  },
+  {
+    title: "Antincendio",
+    category: "Impianti & verifiche",
+    image: u("1581092160562-40aa08e78837"),
+    href: "/#servizi",
+    gridClass: "lg:col-start-3 lg:row-start-3",
+  },
+  {
+    title: "Tetti",
+    category: "Coperture & disgaggio",
+    image: u("1486325212027-8081e485255e"),
+    href: "/#servizi",
+    gridClass:
+      "lg:col-start-4 lg:row-start-3 lg:row-span-2",
+  },
+  {
+    title: "Posa cavi",
+    category: "Installazioni in quota",
+    image: u("1503387762-592deb58ef4e"),
+    href: "/lavori/polo-industriale-brescia",
+    gridClass: "lg:col-start-2 lg:row-start-3",
+  },
+  {
+    title: "Consolidamenti",
+    category: "Strutture & ancoraggi",
+    image: u("1504307651254-35680f356dfd"),
+    href: "/#servizi",
+    gridClass: "lg:col-span-2 lg:col-start-2 lg:row-start-4",
+  },
+];
 
 export const projects: Project[] = [
   {

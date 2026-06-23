@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import Autoplay from "embla-carousel-autoplay";
 import { Quote } from "lucide-react";
 import {
   Carousel,
@@ -13,10 +15,24 @@ import { Reveal } from "@/components/reveal";
 import { testimonials } from "@/lib/site";
 
 export function Testimonials() {
+  const autoplay = useRef(
+    Autoplay({
+      delay: 4500,
+      stopOnInteraction: true,
+      stopOnMouseEnter: true,
+    }),
+  );
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      autoplay.current.stop();
+    }
+  }, []);
+
   return (
-    <section className="bg-muted/40 py-20 lg:py-28">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
+    <section className="section bg-muted/40">
+      <div className="section-container">
+        <Reveal className="section-header">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Dicono di noi
           </span>
@@ -25,7 +41,11 @@ export function Testimonials() {
           </h2>
         </Reveal>
 
-        <Carousel className="mt-14" opts={{ align: "start", loop: true }}>
+        <Carousel
+          className="section-content"
+          opts={{ align: "start", loop: true }}
+          plugins={[autoplay.current]}
+        >
           <CarouselContent>
             {testimonials.map((t) => (
               <CarouselItem key={t.author} className="md:basis-1/2">

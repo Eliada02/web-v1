@@ -1,15 +1,15 @@
 import { Reveal } from "@/components/reveal";
-import { ServiceCard } from "@/components/service-card";
-import { services } from "@/lib/site";
+import { ServicesAnimatedGrid } from "@/components/services-animated-grid";
+import { site } from "@/lib/site";
 
 export function Services() {
   return (
     <section
       id="servizi"
-      className="dark bg-background py-20 text-foreground lg:py-28"
+      className="section dark bg-background text-foreground"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal className="mx-auto max-w-2xl text-center">
+      <div className="section-container">
+        <Reveal className="section-header">
           <span className="text-sm font-semibold uppercase tracking-wider text-primary">
             Cosa facciamo
           </span>
@@ -22,16 +22,13 @@ export function Services() {
           </p>
         </Reveal>
 
-        {/* The services are arranged as the lit windows of a single building
-            facade — one object, not separate cards. */}
-        <Reveal className="mx-auto mt-14 max-w-5xl">
+        <Reveal className="section-content">
           <div className="border-2 border-primary/25 bg-white/[0.02] shadow-2xl shadow-black/40">
-            {/* Rooftop / cornice */}
             <div className="flex items-center justify-between gap-4 border-b-2 border-primary/25 bg-primary/10 px-5 py-3">
               <div className="flex items-center gap-2">
                 <span className="size-2.5 bg-primary" />
                 <span className="text-xs font-semibold uppercase tracking-widest text-primary">
-                  VERTIKAL · Servizi in quota
+                  {site.name} · Servizi in quota
                 </span>
               </div>
               <div className="flex items-end gap-1" aria-hidden>
@@ -41,26 +38,8 @@ export function Services() {
               </div>
             </div>
 
-            {/* Windows (gap-0 → shared mullions form one facade) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, i) => {
-                const Icon = service.icon;
-                const isLast = i === services.length - 1;
-                return (
-                  <ServiceCard
-                    key={service.title}
-                    icon={<Icon />}
-                    title={service.title}
-                    description={service.description}
-                    // keep the facade complete: the lone last window fills the
-                    // row on the 2-column (tablet) layout.
-                    className={isLast ? "sm:col-span-2 lg:col-span-1" : undefined}
-                  />
-                );
-              })}
-            </div>
+            <ServicesAnimatedGrid />
 
-            {/* Ground line / entrance */}
             <div className="flex items-center justify-center border-t-2 border-primary/25 bg-primary/10 px-5 py-2.5">
               <span className="text-xs font-medium uppercase tracking-widest text-primary/80">
                 9 servizi · un unico partner
