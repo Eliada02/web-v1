@@ -165,15 +165,38 @@
   }
 }
 
-@keyframes icon-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
-  }
-  70% {
-    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
-  }
+@keyframes phone-shake {
+  0%,
+  50%,
   100% {
-    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent);
+    transform: rotate(0deg);
+  }
+  52% {
+    transform: rotate(-14deg);
+  }
+  54% {
+    transform: rotate(14deg);
+  }
+  56% {
+    transform: rotate(-14deg);
+  }
+  58% {
+    transform: rotate(14deg);
+  }
+  60% {
+    transform: rotate(-10deg);
+  }
+  62% {
+    transform: rotate(10deg);
+  }
+  64% {
+    transform: rotate(-6deg);
+  }
+  66% {
+    transform: rotate(6deg);
+  }
+  68% {
+    transform: rotate(0deg);
   }
 }
 

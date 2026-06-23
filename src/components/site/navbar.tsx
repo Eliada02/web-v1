@@ -120,19 +120,18 @@ export function Navbar() {
               title={site.phone}
               className={cn(
                 "inline-flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors md:size-9",
-                "motion-safe:max-md:animate-[icon-pulse_2s_ease-out_infinite]",
                 open
                   ? "text-primary hover:bg-primary/10"
                   : overHero
-                    ? "text-white motion-safe:max-md:animate-[btn-pulse-outline_2s_ease-out_infinite] hover:bg-white/10"
+                    ? "text-white hover:bg-white/10"
                     : "text-primary hover:bg-primary/10",
               )}
             >
-              <Phone className="size-5" />
+              <Phone className="size-5 motion-safe:animate-[phone-shake_2.5s_ease-in-out_infinite]" />
             </a>
 
             <div className="hidden items-center gap-3 md:flex">
-              <Button asChild pulse>
+              <Button asChild>
                 <a href="/#contatti">Preventivo gratuito</a>
               </Button>
             </div>
@@ -209,7 +208,7 @@ export function Navbar() {
             transitionDelay: open ? `${100 + navLinks.length * 50}ms` : "0ms",
           }}
         >
-          <Button asChild size="lg" pulse className="w-full text-base">
+          <Button asChild size="lg" className="w-full text-base">
             <a href="#contatti" onClick={() => setOpen(false)}>
               Preventivo gratuito
               <ArrowRight className="size-4" />
