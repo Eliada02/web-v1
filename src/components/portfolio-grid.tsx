@@ -302,15 +302,15 @@ export function PortfolioGrid() {
       style={{ height: `${count * 100}dvh` }}
     >
       <div className="sticky top-0 flex h-dvh flex-col bg-background [transform:translateZ(0)]">
-        <div className="section-container shrink-0 pt-6 pb-3 sm:pt-10 sm:pb-5">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary sm:text-sm">
+        <div className="section-container shrink-0 pt-20 pb-6 sm:pt-10 sm:pb-5">
+          <div className="max-w-2xl">
+            <span className="text-sm font-semibold uppercase tracking-wider text-primary">
               Portfolio
             </span>
-            <h2 className="mt-1.5 text-xl font-bold tracking-tight sm:mt-2 sm:text-3xl lg:text-4xl">
+            <h2 className="mt-3 text-2xl font-bold leading-tight tracking-tight sm:mt-2 sm:text-3xl lg:text-4xl">
               Alcuni dei nostri interventi
             </h2>
-            <p className="mt-1.5 max-w-xl text-xs text-muted-foreground sm:mt-2 sm:text-base">
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:mt-2 sm:text-base">
               Edifici residenziali, uffici, hotel e poli industriali in tutta
               Italia.
             </p>
