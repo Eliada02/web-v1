@@ -7,37 +7,27 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { portfolioGrid, type PortfolioGridItem } from "@/lib/site";
 
+const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);
+
 function PortfolioFocusCard({
   item,
-  open,
+  reveal,
   focused,
   direction,
   stacked = true,
 }: {
   item: PortfolioGridItem;
-  open: boolean;
+  /** How open this card's curtain is: 0 = fully covered, 1 = fully revealed. */
+  reveal: number;
   focused: boolean;
   direction: "vertical" | "horizontal";
   stacked?: boolean;
 }) {
+  // Distance the curtain panels still need to travel to be fully retracted.
+  const closed = (1 - reveal) * 100;
+
   return (
-    <div
-      className={cn(
-        "relative h-full w-full overflow-hidden transition-[transform,opacity,filter] duration-700 ease-out",
-        !stacked && "scale-100 opacity-100",
-        stacked &&
-          focused &&
-          "scale-100 opacity-100",
-        stacked &&
-          !focused &&
-          open &&
-          "scale-[0.97] opacity-0",
-        stacked &&
-          !focused &&
-          !open &&
-          "scale-[0.94] opacity-40",
-      )}
-    >
+    <div className="relative h-full w-full overflow-hidden">
       <Link
         href={item.href}
         aria-label={`${item.title} — scopri di più`}
@@ -57,23 +47,19 @@ function PortfolioFocusCard({
           priority={focused}
           sizes="(max-width: 768px) 100vw, 80vw"
           className={cn(
-            "object-cover transition-transform duration-700 ease-out",
-            focused ? "scale-100" : "scale-110",
-            "group-hover:scale-105",
+            "object-cover transition-transform duration-500 ease-out",
+            !stacked && "scale-100 group-hover:scale-105",
           )}
+          // Gentle zoom that resolves as the card opens (showcase only).
+          style={
+            stacked ? { transform: `scale(${1.06 - 0.06 * reveal})` } : undefined
+          }
         />
-        <div
-          className={cn(
-            "absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10 transition-opacity duration-500",
-            focused ? "opacity-100" : "opacity-80",
-          )}
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/10" />
         <span
           className={cn(
             "absolute right-4 top-4 flex size-10 items-center justify-center bg-primary text-primary-foreground transition-all duration-300",
-            focused
-              ? "translate-y-0 opacity-100"
-              : "translate-y-2 opacity-0",
+            focused ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
             "group-hover:translate-y-0 group-hover:opacity-100",
           )}
         >
@@ -110,42 +96,33 @@ function PortfolioFocusCard({
         </div>
       </Link>
 
+      {/* Curtain panels. Their offset is driven directly by `reveal`, so the
+          opening tracks the scroll position; a short eased transition smooths
+          out any per-frame jitter. */}
       {direction === "vertical" ? (
         <>
           <div
             aria-hidden
-            className={cn(
-              "pointer-events-none absolute inset-x-0 top-0 z-20 h-1/2 bg-background motion-reduce:hidden",
-              "transition-transform duration-[800ms] ease-[cubic-bezier(0.76,0,0.24,1)]",
-              open ? "-translate-y-full" : "translate-y-0",
-            )}
+            className="pointer-events-none absolute inset-x-0 top-0 z-20 h-1/2 bg-background transition-transform duration-300 ease-out motion-reduce:hidden"
+            style={{ transform: `translateY(${-closed}%)` }}
           />
           <div
             aria-hidden
-            className={cn(
-              "pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1/2 bg-background motion-reduce:hidden",
-              "transition-transform duration-[800ms] ease-[cubic-bezier(0.76,0,0.24,1)]",
-              open ? "translate-y-full" : "translate-y-0",
-            )}
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-1/2 bg-background transition-transform duration-300 ease-out motion-reduce:hidden"
+            style={{ transform: `translateY(${closed}%)` }}
           />
         </>
       ) : (
         <>
           <div
             aria-hidden
-            className={cn(
-              "pointer-events-none absolute inset-y-0 left-0 z-20 w-1/2 bg-background motion-reduce:hidden",
-              "transition-transform duration-[800ms] ease-[cubic-bezier(0.76,0,0.24,1)]",
-              open ? "-translate-x-full" : "translate-x-0",
-            )}
+            className="pointer-events-none absolute inset-y-0 left-0 z-20 w-1/2 bg-background transition-transform duration-300 ease-out motion-reduce:hidden"
+            style={{ transform: `translateX(${-closed}%)` }}
           />
           <div
             aria-hidden
-            className={cn(
-              "pointer-events-none absolute inset-y-0 right-0 z-20 w-1/2 bg-background motion-reduce:hidden",
-              "transition-transform duration-[800ms] ease-[cubic-bezier(0.76,0,0.24,1)]",
-              open ? "translate-x-full" : "translate-x-0",
-            )}
+            className="pointer-events-none absolute inset-y-0 right-0 z-20 w-1/2 bg-background transition-transform duration-300 ease-out motion-reduce:hidden"
+            style={{ transform: `translateX(${closed}%)` }}
           />
         </>
       )}
@@ -172,7 +149,7 @@ function PortfolioGridFallback() {
           <div key={item.title} className="relative min-h-56">
             <PortfolioFocusCard
               item={item}
-              open
+              reveal={1}
               focused={false}
               stacked={false}
               direction={i % 2 === 0 ? "vertical" : "horizontal"}
@@ -186,7 +163,8 @@ function PortfolioGridFallback() {
 
 export function PortfolioGrid() {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  // Continuous scroll progress through the showcase (0 → count - 1).
+  const [progress, setProgress] = useState(0);
   const [useScrollShowcase, setUseScrollShowcase] = useState(true);
   const count = portfolioGrid.length;
 
@@ -212,8 +190,9 @@ export function PortfolioGrid() {
       const rect = track.getBoundingClientRect();
       const step = viewportStep();
       const scrolled = Math.max(0, -rect.top);
-      const index = Math.min(count - 1, Math.floor(scrolled / step));
-      setActiveIndex(index);
+      // Fractional progress — this is what makes the reveal track the scroll
+      // continuously instead of snapping at each viewport boundary.
+      setProgress(Math.min(count - 1, scrolled / step));
     };
 
     const onScroll = () => {
@@ -237,6 +216,8 @@ export function PortfolioGrid() {
   if (!useScrollShowcase) {
     return <PortfolioGridFallback />;
   }
+
+  const activeIndex = Math.min(count - 1, Math.round(progress));
 
   return (
     <div
@@ -286,22 +267,26 @@ export function PortfolioGrid() {
         </div>
 
         <div className="section-container relative min-h-0 flex-1 pb-4 sm:pb-10">
-          {portfolioGrid.map((item, i) => (
-            <div
-              key={item.title}
-              className={cn(
-                "absolute inset-0 pb-4 sm:pb-10",
-                i === activeIndex ? "z-20" : "z-10",
-              )}
-            >
-              <PortfolioFocusCard
-                item={item}
-                open={i <= activeIndex}
-                focused={i === activeIndex}
-                direction={i % 2 === 0 ? "vertical" : "horizontal"}
-              />
-            </div>
-          ))}
+          {portfolioGrid.map((item, i) => {
+            // Card i opens across the scroll segment [i-1, i]. Card 0 is always
+            // open. Cards stack so the one currently opening sits on top of the
+            // already-revealed one beneath it; not-yet-opened cards stay behind.
+            const reveal = clamp01(progress - (i - 1));
+            return (
+              <div
+                key={item.title}
+                className="absolute inset-0 pb-4 sm:pb-10"
+                style={{ zIndex: reveal === 0 ? 10 : 11 + i }}
+              >
+                <PortfolioFocusCard
+                  item={item}
+                  reveal={reveal}
+                  focused={i === activeIndex}
+                  direction={i % 2 === 0 ? "vertical" : "horizontal"}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <p className="section-container shrink-0 pb-3 text-center text-[0.65rem] text-muted-foreground sm:pb-6 sm:text-xs">
