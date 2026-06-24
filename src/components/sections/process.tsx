@@ -23,8 +23,8 @@ export function Process() {
 
         <div className="section-content grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-6">
           {processSteps.map((step, i) => (
-            <Reveal key={step.step} delay={i * 100} className="group relative">
-              <div className="text-5xl font-bold text-primary/20 transition-colors duration-300 group-hover:text-primary">
+            <Reveal key={step.step} delay={i * 100} className="relative">
+              <div className="text-5xl font-bold text-primary">
                 {step.step}
               </div>
               {i < processSteps.length - 1 && (
